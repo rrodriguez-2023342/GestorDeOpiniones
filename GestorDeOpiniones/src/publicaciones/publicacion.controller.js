@@ -1,11 +1,32 @@
 'use strict';
 
 import Publicacion from './publicacion.model.js';
+import { uploadImage } from '../../helpers/cloudinary-service.js';
 
 //Crear Publicacion
 export const crearPublicacion = async(req, res) => {
     try {
         const publicacionData = req.body;
+        let imagenUrl = null;
+
+        // Si se envía archivo (imagen), subir a Cloudinary
+        if (req.file) {
+            try {
+                // Usar el path y el nombre generado por multer
+                imagenUrl = await uploadImage(req.file.path, req.file.filename);
+            } catch (imgErr) {
+                return res.status(400).json({
+                    succes: false,
+                    message: 'Error al subir la imagen',
+                    error: imgErr.message
+                });
+            }
+        }
+
+        // Asignar la URL de la imagen si existe
+        if (imagenUrl) {
+            publicacionData.imagenUrl = imagenUrl;
+        }
 
         const publicacion = new Publicacion(publicacionData);
         await publicacion.save();
@@ -14,13 +35,13 @@ export const crearPublicacion = async(req, res) => {
             succes: true, 
             message: 'Publicacion creada con exito!',
             data: publicacion
-        })
+        });
     } catch (error) {
         res.status(400).json({
             succes: false, 
             message: 'Error al crear la publicacion',
             error: error.message
-        })
+        });
     }
 }
 

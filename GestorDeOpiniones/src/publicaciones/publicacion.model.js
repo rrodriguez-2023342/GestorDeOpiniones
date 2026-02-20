@@ -27,6 +27,11 @@ const publicacionSchema = mongoose.Schema({
     isActiva: {
         type: Boolean,
         default: true
+    },
+    imagenUrl: {
+        type: String,
+        required: false,
+        default: null
     }
 }, {
     timestamps: true,
