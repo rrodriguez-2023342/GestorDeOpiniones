@@ -36,4 +36,4 @@ const publicacionSchema = mongoose.Schema({
 publicacionSchema.index({ usuarioId: 1});
 publicacionSchema.index({ categoriaPublicacion: 1});
 
-export default mongoose.model('Publicacion', publicacionSchema);
+export default mongoose.model('Publicaciones', publicacionSchema);

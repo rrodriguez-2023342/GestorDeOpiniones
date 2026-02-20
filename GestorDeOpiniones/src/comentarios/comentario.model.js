@@ -12,7 +12,7 @@ const comentarioSchema = mongoose.Schema({
     },
     publicacionId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Publicacion',
+        ref: 'Publicaciones',
         required: [true, 'El ID de la Publicacion es obligatorio']
     },
     userId: {

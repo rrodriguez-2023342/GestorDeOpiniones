@@ -1,4 +1,5 @@
 'use strict'
+
 import express, { response } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -6,10 +7,10 @@ import morgan from 'morgan';
 import { dbConnection } from './db.js';
 import { corsOptions } from './cors-configuration.js';
 import { helmetConfiguration } from './helmet-configuration.js';
-/*
+
 import comentarioRoutes from '../src/comentarios/comentario.routes.js';
 import publicacionRoutes from '../src/publicaciones/publicacion.routes.js';
-*/
+
 const BASE_PATH = '/api/v1';
 
 const middlewares = (app) => {
@@ -20,9 +21,9 @@ const middlewares = (app) => {
     app.use(morgan('dev'));
 }
 
-const routes = (app) => {/*
+const routes = (app) => {
     app.use(`${BASE_PATH}/comentario`, comentarioRoutes);
-    app.use(`${BASE_PATH}/publicacion`, publicacionRoutes);*/
+    app.use(`${BASE_PATH}/publicacion`, publicacionRoutes);
 
 
     app.get(`${BASE_PATH}/Health`, (request, response) => {
