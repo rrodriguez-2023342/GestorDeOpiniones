@@ -2,12 +2,31 @@
 
 import Publicacion from './publicacion.model.js';
 import { uploadImage } from '../../helpers/cloudinary-service.js';
+import { validateUserExists } from '../../helpers/user-validation.js';
 
 //Crear Publicacion
 export const crearPublicacion = async(req, res) => {
     try {
         const publicacionData = req.body;
         let imagenUrl = null;
+
+        // Validar que el usuarioId existe
+        const { usuarioId } = publicacionData;
+        if (!usuarioId) {
+            return res.status(400).json({
+                succes: false,
+                message: 'El usuarioId es obligatorio'
+            });
+        }
+
+        // Verificar que el usuario existe en el Auth-Service
+        const userExists = await validateUserExists(usuarioId);
+        if (!userExists) {
+            return res.status(400).json({
+                succes: false,
+                message: 'El usuario debe ser válido'
+            });
+        }
 
         // Si se envía archivo (imagen), subir a Cloudinary
         if (req.file) {

@@ -84,3 +84,21 @@ export const getUsersByRole = [
         return res.status(200).json(payload);
     }),
 ];
+
+// Obtener usuario por ID 
+export const getUserById = asyncHandler(async (req, res) => {
+    const { userId } = req.params;
+
+    const user = await findUserById(userId);
+    if (!user) {
+        return res.status(404).json({
+            success: false,
+            message: 'Usuario no encontrado'
+        });
+    }
+
+    return res.status(200).json({
+        success: true,
+        data: buildUserResponse(user)
+    });
+});

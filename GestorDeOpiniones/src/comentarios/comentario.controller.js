@@ -1,11 +1,30 @@
 'use strict';
 
 import Comentario from './comentario.model.js';
+import { validateUserExists } from '../../helpers/user-validation.js';
 
 //Crear Publicacion
 export const crearComentario = async(req, res) => {
     try {
         const comentarioData = req.body;
+
+        // Validar que el userId existe
+        const { userId } = comentarioData;
+        if (!userId) {
+            return res.status(400).json({
+                succes: false,
+                message: 'El userId es obligatorio'
+            });
+        }
+
+        // Verificar que el usuario existe en el Auth-Service
+        const userExists = await validateUserExists(userId);
+        if (!userExists) {
+            return res.status(400).json({
+                succes: false,
+                message: 'El usuario debe ser válido'
+            });
+        }
 
         const comentario = new Comentario(comentarioData);
         await comentario.save();
