@@ -8,17 +8,22 @@ export const crearComentario = async(req, res) => {
     try {
         const comentarioData = req.body;
 
-        // Validar que el userId existe
+        // Validar que el userId o usuarioId existe
         const { userId } = comentarioData;
-        if (!userId) {
+        const userIdFinal = userId;
+        
+        if (!userIdFinal) {
             return res.status(400).json({
                 succes: false,
-                message: 'El userId es obligatorio'
+                message: 'El userId o usuarioId es obligatorio'
             });
         }
 
+        // Asegurar que el campo sea userId
+        comentarioData.userId = userIdFinal;
+
         // Verificar que el usuario existe en el Auth-Service
-        const userExists = await validateUserExists(userId);
+        const userExists = await validateUserExists(userIdFinal);
         if (!userExists) {
             return res.status(400).json({
                 succes: false,
@@ -106,24 +111,48 @@ export const getComentarioById = async (req, res) => {
     }
 };
 
-//Actualizar Publicacion
+//Actualizar Comentario
 export const updateComentario = async (req, res) => {
     try {
         const { id } = req.params;
         const comentarioData = req.body;
+        const { userId, usuarioId } = comentarioData;
+        const userIdFinal = userId || usuarioId;
+        
+        // Buscar el comentario para verificar propiedad
+        const comentarioExistente = await Comentario.findById(id);
+        
+        if (!comentarioExistente) {
+            return res.status(404).json({
+                success: false,
+                message: 'Comentario no encontrado'
+            });
+        }
+
+        // Validar que userId o usuarioId fue enviado
+        if (!userIdFinal) {
+            return res.status(400).json({
+                success: false,
+                message: 'El userId o usuarioId es obligatorio en el body'
+            });
+        }
+
+        // Validar que el usuario que intenta actualizar es el propietario
+        if (comentarioExistente.userId !== userIdFinal) {
+            return res.status(403).json({
+                success: false,
+                message: 'No tienes permiso para actualizar este comentario'
+            });
+        }
+
+        // Asegurar que el campo sea userId
+        comentarioData.userId = userIdFinal;
         
         const comentario = await Comentario.findByIdAndUpdate(
             id,
             comentarioData,
             { new: true, runValidators: true }
         );
-
-        if (!comentario) {
-            return res.status(404).json({
-                success: false,
-                message: 'Comentario no encontrado'
-            });
-        }
 
         res.status(200).json({
             success: true,
@@ -143,14 +172,36 @@ export const updateComentario = async (req, res) => {
 export const deleteComentario = async (req, res) => {
     try {
         const { id } = req.params;
-        const comentario = await Comentario.findByIdAndDelete(id);
-
+        const { userId, usuarioId } = req.body;
+        const userIdFinal = userId || usuarioId;
+        
+        // Buscar el comentario para verificar propiedad
+        const comentario = await Comentario.findById(id);
+        
         if (!comentario) {
             return res.status(404).json({
                 success: false,
                 message: 'Comentario no encontrado'
             });
         }
+
+        // Validar que userId o usuarioId fue enviado
+        if (!userIdFinal) {
+            return res.status(400).json({
+                success: false,
+                message: 'El userId o usuarioId es obligatorio en el body'
+            });
+        }
+
+        // Validar que el usuario que intenta eliminar es el propietario
+        if (comentario.userId !== userIdFinal) {
+            return res.status(403).json({
+                success: false,
+                message: 'No tienes permiso para eliminar este comentario'
+            });
+        }
+
+        await Comentario.findByIdAndDelete(id);
 
         res.status(200).json({
             success: true,

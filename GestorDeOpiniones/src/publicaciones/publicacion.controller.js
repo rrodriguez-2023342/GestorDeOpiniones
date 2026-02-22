@@ -132,19 +132,39 @@ export const updatePublicacion = async (req, res) => {
     try {
         const { id } = req.params;
         const publicacionData = req.body;
+        const { usuarioId } = publicacionData;
+        
+        // Buscar la publicación para verificar propiedad
+        const publicacionExistente = await Publicacion.findById(id);
+        
+        if (!publicacionExistente) {
+            return res.status(404).json({
+                success: false,
+                message: 'Publicacion no encontrada'
+            });
+        }
+
+        // Validar que usuarioId fue enviado
+        if (!usuarioId) {
+            return res.status(400).json({
+                success: false,
+                message: 'El usuarioId es obligatorio en el body',
+            });
+        }
+
+        // Validar que el usuario que intenta actualizar es el propietario
+        if (publicacionExistente.usuarioId !== usuarioId) {
+            return res.status(403).json({
+                success: false,
+                message: 'No tienes permiso para actualizar esta publicacion'
+            });
+        }
         
         const publicacion = await Publicacion.findByIdAndUpdate(
             id,
             publicacionData,
             { new: true, runValidators: true }
         );
-
-        if (!publicacion) {
-            return res.status(404).json({
-                success: false,
-                message: 'Publicacion no encontrada'
-            });
-        }
 
         res.status(200).json({
             success: true,
@@ -164,14 +184,35 @@ export const updatePublicacion = async (req, res) => {
 export const deletePublicacion = async (req, res) => {
     try {
         const { id } = req.params;
-        const publicacion = await Publicacion.findByIdAndDelete(id);
-
+        const { usuarioId } = req.body;
+        
+        // Buscar la publicación para verificar propiedad
+        const publicacion = await Publicacion.findById(id);
+        
         if (!publicacion) {
             return res.status(404).json({
                 success: false,
                 message: 'Publicacion no encontrada'
             });
         }
+
+        // Validar que usuarioId fue enviado
+        if (!usuarioId) {
+            return res.status(400).json({
+                success: false,
+                message: 'El usuarioId es obligatorio en el body'
+            });
+        }
+
+        // Validar que el usuario que intenta eliminar es el propietario
+        if (publicacion.usuarioId !== usuarioId) {
+            return res.status(403).json({
+                success: false,
+                message: 'No tienes permiso para eliminar esta publicacion'
+            });
+        }
+
+        await Publicacion.findByIdAndDelete(id);
 
         res.status(200).json({
             success: true,
