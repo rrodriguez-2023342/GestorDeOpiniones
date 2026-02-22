@@ -1,0 +1,700 @@
+{
+	"info": {
+		"_postman_id": "32854311-eb00-4336-9130-27a52e30e0e4",
+		"name": "Gestor de Opiniones",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "48332489",
+		"_collection_link": "https://www.postman.com/rrodriguez-2023342-3990564/workspace/in5bm/collection/48332489-32854311-eb00-4336-9130-27a52e30e0e4?action=share&source=collection_link&creator=48332489"
+	},
+	"item": [
+		{
+			"name": "AuthService",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{authDotNetUrl}}/api/v1/health",
+							"host": [
+								"{{authDotNetUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"health"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.json().token) {",
+									"    pm.environment.set('authToken', pm.response.json().token);",
+									"    pm.environment.set('userId', pm.response.json().user.id);",
+									"    pm.environment.set('userEmail', pm.response.json().user.email);",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Roberto",
+									"type": "text"
+								},
+								{
+									"key": "surname",
+									"value": "Rodriguez",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "roberto12345",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "robertoandre0307@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "rrodriguez",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "47895623",
+									"type": "text"
+								},
+								{
+									"key": "profilePicture",
+									"type": "file",
+									"src": "/C:/Users/Roberto/OneDrive/Pictures/Screenshots 1/Captura de pantalla 2026-02-09 181931.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3005/api/v1/auth/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3005",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.json().token) {",
+									"    pm.environment.set('authToken', pm.response.json().token);",
+									"    pm.environment.set('userId', pm.response.json().userDetails.id);",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"emailOrUsername\": \"robertoandre0307@gmail.com\",\n    \"password\": \"rrodriguez\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3005/api/v1/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3005",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify Email",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"token\": \"UeEfY6sPCqqUcnClkZJHKolYjX3sb8E_0bkrCL_l6us\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3005/api/v1/auth/verify-email",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3005",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"verify-email"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Resend Verification",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"robertoandre0307@gmail.com\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3005/api/v1/auth/resend-verification",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3005",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"resend-verification"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Forgot Password",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"robertoandre0307@gmail.com\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5026/api/v1/auth/forgot-password",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5026",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"forgot-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reset Password",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"token\": \"W7nXYHsHfap3qJAA9k4NurD5lO3j3CtA9sOT-y9FoN8\",\n    \"newPassword\": \"jjimenez\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5026/api/v1/auth/reset-password",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5026",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"reset-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change Role",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{vault:authorization-secret}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"roleName\": \"ADMIN_ROLE\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3005/api/v1/users/usr_xtC3RF9B4SbM/role",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3005",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"usr_xtC3RF9B4SbM",
+								"role"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Gestor de Opiniones",
+			"item": [
+				{
+					"name": "Publicaciones",
+					"item": [
+						{
+							"name": "crearPublicacion",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{vault:authorization-secret}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "usuarioId",
+											"value": "usr_ZA1qTX4MJyx5",
+											"type": "text"
+										},
+										{
+											"key": "tituloPublicacion",
+											"value": "Hola Mundo",
+											"type": "text"
+										},
+										{
+											"key": "categoriaPublicacion",
+											"value": "Hola Mundo",
+											"type": "text"
+										},
+										{
+											"key": "imagenUrl",
+											"type": "file",
+											"src": "/C:/Users/Informatica/Documents/NetBeansProjects/EjemploJavaFX2025287/EjemploJavaFX2025287/src/org/carlosxocop/image/Foto Personal.jpeg"
+										},
+										{
+											"key": "contenido",
+											"value": "waza123456",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:3006/api/v1/publicacion/create",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3006",
+									"path": [
+										"api",
+										"v1",
+										"publicacion",
+										"create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "getPublicaciones",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3006/api/v1/publicacion/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3006",
+									"path": [
+										"api",
+										"v1",
+										"publicacion",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "getPublicacionById",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3006/api/v1/publicacion/6997ac373693228e2bfb6eb3",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3006",
+									"path": [
+										"api",
+										"v1",
+										"publicacion",
+										"6997ac373693228e2bfb6eb3"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "updatePublicacion",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{vault:authorization-secret}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"usuarioId\": \"usr_ZA1qTX4MJyx5\",\r\n\t\t\"tituloPublicacion\": \"Hola Mundosadfdsafsdfasdf\",\r\n\t\t\"categoriaPublicacion\": \"Agradecimiento\",\r\n\t\t\"contenido\": \"Hola Mundo!\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3006/api/v1/publicacion/699a4a0853e5198007a11494",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3006",
+									"path": [
+										"api",
+										"v1",
+										"publicacion",
+										"699a4a0853e5198007a11494"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "deletePublicacion",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{vault:authorization-secret}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"usuarioId\": \"usr_9KPvmVVU4z8q\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3006/api/v1/publicacion/699a41bb991021ea8e9006d1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3006",
+									"path": [
+										"api",
+										"v1",
+										"publicacion",
+										"699a41bb991021ea8e9006d1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Comentarios",
+					"item": [
+						{
+							"name": "crearComentario",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c3JfWkExcVRYNE1KeXg1IiwianRpIjoiMTgzODJkYTktY2E2NS00NDExLTk5MTYtYmEyOTU5MjQ4ZDMyIiwiaWF0IjoxNzcxNzIwMDE3LCJyb2xlIjoiVVNFUl9ST0xFIiwiZXhwIjoxNzcxNzIxODE3LCJhdWQiOiJBdXRoU2VydmljZSIsImlzcyI6IkF1dGhTZXJ2aWNlIn0.qu5haHcLDD0GgDRvLtevDouvyIUe5lcPXuHc4dJas3o",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"contenidoComentario\": \"Hola MUNDO!\",\r\n    \"publicacionId\": \"699a4a0853e5198007a11494\",\r\n    \"userId\": \"usr_ZA1qTX4MJyx5\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3006/api/v1/comentario/create",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3006",
+									"path": [
+										"api",
+										"v1",
+										"comentario",
+										"create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "getComentarios",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3006/api/v1/comentario/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3006",
+									"path": [
+										"api",
+										"v1",
+										"comentario",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "getComentarioById",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3006/api/v1/comentario/6997b34f01889538a15ee3f7",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3006",
+									"path": [
+										"api",
+										"v1",
+										"comentario",
+										"6997b34f01889538a15ee3f7"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "updateComentario",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c3JfWkExcVRYNE1KeXg1IiwianRpIjoiMDE3N2E4MTctNmRkYy00ZDUyLWJmOTMtMmJlNTQ2ODZjZGM3IiwiaWF0IjoxNzcxNzE5MTIxLCJyb2xlIjoiVVNFUl9ST0xFIiwiZXhwIjoxNzcxNzIwOTIxLCJhdWQiOiJBdXRoU2VydmljZSIsImlzcyI6IkF1dGhTZXJ2aWNlIn0.i3mIyS6REF28wX_eMpyDNDezgQqsyVHxSkXm8lwLi6I",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"contenidoComentario\": \"Hola mundo ;)!\",\r\n    \"publicacionId\": \"699a4a0853e5198007a11494\",\r\n    \"userId\": \"usr_ZA1qTX4MJyx5\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3006/api/v1/comentario/699a4d828bbcf08e47f20c5a",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3006",
+									"path": [
+										"api",
+										"v1",
+										"comentario",
+										"699a4d828bbcf08e47f20c5a"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "deleteComentarios",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{vault:authorization-secret}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"userId\": \"usr_9KPvmVVU4z8q\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3006/api/v1/comentario/699a4235991021ea8e9006d5",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3006",
+									"path": [
+										"api",
+										"v1",
+										"comentario",
+										"699a4235991021ea8e9006d5"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}
