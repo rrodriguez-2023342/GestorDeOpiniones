@@ -2,6 +2,7 @@
 
 import mongoose from 'mongoose';
 
+//Creamos el esquema para las publicaciones
 const publicacionSchema = mongoose.Schema({
     usuarioId:{
         type: String,
@@ -38,7 +39,9 @@ const publicacionSchema = mongoose.Schema({
     versionKey: false
 });
 
+//Indices para las que las busquedas sean mas rapidas
 publicacionSchema.index({ usuarioId: 1});
 publicacionSchema.index({ categoriaPublicacion: 1});
 
+//Exportamos el modelo
 export default mongoose.model('Publicaciones', publicacionSchema);

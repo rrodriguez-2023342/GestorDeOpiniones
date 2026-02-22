@@ -3,9 +3,10 @@ import { checkValidators } from './checkValidators.js';
 import { validateJWT } from './validate-JWT.js';
 import { requireRoles } from './validate-role.js';
 
+//Validacion para crear una publicacion
 export const validateCreatePublicacion = [
-    validateJWT,
-    requireRoles('USER_ROLE', 'ADMIN_ROLE'),
+    validateJWT, //Verificar autenticacion
+    requireRoles('USER_ROLE', 'ADMIN_ROLE'), //Roles permitidos
     body('usuarioId')
         .notEmpty()
         .withMessage('El ID del usuario es obligatorio')
@@ -30,12 +31,13 @@ export const validateCreatePublicacion = [
         .optional()
         .isBoolean()
         .withMessage('El campo isActiva debe ser un booleano'),
-    checkValidators
+    checkValidators //Verificar si hubo errores
 ];
 
+//Validacion para editar publicacion
 export const validateUpdatePublicacion = [
-    validateJWT,
-    requireRoles('USER_ROLE', 'ADMIN_ROLE'),
+    validateJWT, //Verificar autenticacion
+    requireRoles('USER_ROLE', 'ADMIN_ROLE'), //Roles permitidos
     param('id')
         .notEmpty()
         .withMessage('El ID de la publicacion es obligatorio')
@@ -57,16 +59,17 @@ export const validateUpdatePublicacion = [
         .optional()
         .isBoolean()
         .withMessage('El campo isActiva debe ser un booleano'),
-    checkValidators,
+    checkValidators, //Validar si hubo errores
 ];
 
+//Validacion para eliminar publicacion
 export const validateDeletePublicacion = [
-    validateJWT,
-    requireRoles('USER_ROLE', 'ADMIN_ROLE'),
+    validateJWT, //Validar autenticacion
+    requireRoles('USER_ROLE', 'ADMIN_ROLE'), //Roles permitidos
     param('id')
         .notEmpty()
         .withMessage('El ID de la publicacion es obligatorio')
         .isMongoId()
         .withMessage('El ID de la publicacion debe ser un ID de MongoDB valido'),
-    checkValidators,
+    checkValidators, //Verificar si hubo errores
 ];

@@ -1,20 +1,20 @@
 import path from 'path';
 import { randomBytes } from 'crypto';
 
-/**
- * Validador de archivos similar al de .NET
- */
+//Validar imagenes antes de subirlas
 export class FileValidator {
     static ALLOWED_IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp'];
     static MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024; // 5MB
+    //Extensiones permitidas
     static ALLOWED_CONTENT_TYPES = [
         'image/jpeg',
         'image/jpg',
         'image/png',
         'image/webp',
     ];
-
+    //Metodo para validar la imagen
     static validateImage(file) {
+        //Verificar que exista y no este vacio
         if (!file || file.size === 0) {
         return { isValid: false, errorMessage: 'File is required' };
         }
@@ -43,16 +43,19 @@ export class FileValidator {
 
         return { isValid: true };
     }
-
+    //Generar el nombre del archivo
     static generateSecureFileName(originalFileName) {
+        //Obtenemos la extension original
         const extension = path.extname(originalFileName).toLowerCase();
         const uniqueId = randomBytes(6).toString('hex'); // 12 caracteres únicos
         return `profile-${uniqueId}${extension}`;
     }
 
+    //Sanitizar el nombre
     static sanitizeFileName(fileName) {
+        //Quitamos espacios, reemplazamos espacios y guiones por _, y lo convertimos en minusculas
         return fileName.trim().replace(/ /g, '_').replace(/-/g, '_').toLowerCase();
     }
 }
-
+//Exportamos la clase
 export default FileValidator;

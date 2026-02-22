@@ -2,6 +2,7 @@
 
 import mongoose from 'mongoose';
 
+//Creamos el esquema para los comentarios
 const comentarioSchema = mongoose.Schema({
     contenidoComentario: {
         type: String,
@@ -24,7 +25,9 @@ const comentarioSchema = mongoose.Schema({
     versionKey: false
 });
 
+//Indices para las que las busquedas sean mas rapidas
 comentarioSchema.index({ publicacionId: 1 });
 comentarioSchema.index({ userId: 1 });
 
+//Exportamos el modelo
 export default mongoose.model('Comentario', comentarioSchema);

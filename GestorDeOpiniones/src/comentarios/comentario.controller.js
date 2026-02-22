@@ -3,15 +3,17 @@
 import Comentario from './comentario.model.js';
 import { validateUserExists } from '../../helpers/user-validation.js';
 
-//Crear Publicacion
+//Crear Comentario
 export const crearComentario = async(req, res) => {
     try {
+        //Obtenemos los datos del Body
         const comentarioData = req.body;
 
-        // Validar que el userId o usuarioId existe
+        // Validar que el userId existe
         const { userId } = comentarioData;
         const userIdFinal = userId;
         
+        //Validamos que el userId venga en la peticion
         if (!userIdFinal) {
             return res.status(400).json({
                 succes: false,
@@ -30,16 +32,20 @@ export const crearComentario = async(req, res) => {
                 message: 'El usuario debe ser válido'
             });
         }
-
+        
+        //Creamos una nueva instancia del comentario
         const comentario = new Comentario(comentarioData);
+        //Lo guardamos en la base de datos
         await comentario.save();
 
+        //Respuesta exitosa
         res.status(201).json({
             succes: true, 
             message: 'Comentario creado con exito!',
             data: comentario
         })
     } catch (error) {
+        //Captura de errores
         res.status(400).json({
             succes: false, 
             message: 'Error al crear el comentario',
@@ -48,9 +54,10 @@ export const crearComentario = async(req, res) => {
     }
 }
 
-//Listar Publicaciones
+//Listar Comentarios
 export const getComentarios = async(req, res) => {
     try {
+        //Obtenemos el page y limit desde el query
         const { page = 1, limit = 10} = req.query;
 
         const options = {
@@ -58,12 +65,13 @@ export const getComentarios = async(req, res) => {
             limit: parseInt(limit),
             sort: { createdAt: -1 }
         }
-
+        //Buscamos los comentarios
         const comentarios = await Comentario.find()
             .limit(limit * 1)
             .skip((page - 1) * limit)
             .sort();
 
+        //Contamos el total
         const total = await Comentario.countDocuments();
 
         res.status(200).json({
@@ -85,12 +93,15 @@ export const getComentarios = async(req, res) => {
     }
 }
 
-//Buscar publicacion por Id
+//Buscar comentario por Id
 export const getComentarioById = async (req, res) => {
     try {
+        //Obtenemos el id desde los parametros
         const { id } = req.params;
+        //Buscamos el comentario por Id
         const comentario = await Comentario.findById(id);
-            
+        
+        //Si no existe, mostaramos el mensaje
         if (!comentario) {
             return res.status(404).json({
                 success: false,
@@ -98,6 +109,7 @@ export const getComentarioById = async (req, res) => {
             });
         }
         
+        //Si existe, lo devolvemos
         res.status(200).json({
             success: true,
             data: comentario
@@ -116,8 +128,8 @@ export const updateComentario = async (req, res) => {
     try {
         const { id } = req.params;
         const comentarioData = req.body;
-        const { userId, usuarioId } = comentarioData;
-        const userIdFinal = userId || usuarioId;
+        const { userId } = comentarioData;
+        const userIdFinal = userId;
         
         // Buscar el comentario para verificar propiedad
         const comentarioExistente = await Comentario.findById(id);
@@ -129,7 +141,7 @@ export const updateComentario = async (req, res) => {
             });
         }
 
-        // Validar que userId o usuarioId fue enviado
+        // Validar que userId fue enviado
         if (!userIdFinal) {
             return res.status(400).json({
                 success: false,
@@ -148,6 +160,7 @@ export const updateComentario = async (req, res) => {
         // Asegurar que el campo sea userId
         comentarioData.userId = userIdFinal;
         
+        //Actualizamos el comentario
         const comentario = await Comentario.findByIdAndUpdate(
             id,
             comentarioData,
@@ -169,6 +182,7 @@ export const updateComentario = async (req, res) => {
     }
 }
 
+//Eliminar Comentario
 export const deleteComentario = async (req, res) => {
     try {
         const { id } = req.params;
@@ -178,6 +192,7 @@ export const deleteComentario = async (req, res) => {
         // Buscar el comentario para verificar propiedad
         const comentario = await Comentario.findById(id);
         
+        //Validamos que venga el userId
         if (!comentario) {
             return res.status(404).json({
                 success: false,
@@ -185,7 +200,7 @@ export const deleteComentario = async (req, res) => {
             });
         }
 
-        // Validar que userId o usuarioId fue enviado
+        // Validar que userId fue enviado
         if (!userIdFinal) {
             return res.status(400).json({
                 success: false,
@@ -201,6 +216,7 @@ export const deleteComentario = async (req, res) => {
             });
         }
 
+        //Eliminamos el comentario
         await Comentario.findByIdAndDelete(id);
 
         res.status(200).json({

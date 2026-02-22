@@ -8,6 +8,7 @@
  */
 export const validateUserExists = async (userId, authServiceUrl = 'http://localhost:3005') => {
     try {
+        // Validamos que el userId exista y sea tipo string
         if (!userId || typeof userId !== 'string') {
             console.warn('userId inválido:', userId);
             return false;
@@ -18,6 +19,7 @@ export const validateUserExists = async (userId, authServiceUrl = 'http://localh
         const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 segundos de timeout
 
         try {
+            //Hacemos una peticion GET al Servicion de autenticacion para buscar al usuario
             const response = await fetch(
                 `${authServiceUrl}/api/v1/users/${userId}`,
                 {
@@ -47,6 +49,7 @@ export const validateUserExists = async (userId, authServiceUrl = 'http://localh
             return false;
 
         } catch (fetchError) {
+            //Limipiamos si hubo error
             clearTimeout(timeoutId);
             if (fetchError.name === 'AbortError') {
                 console.error(`Timeout al conectar con Auth-Service para validar usuario ${userId}`);

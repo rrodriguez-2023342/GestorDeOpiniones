@@ -8,11 +8,13 @@ import { validateUserExists } from '../../helpers/user-validation.js';
 //Crear Publicacion
 export const crearPublicacion = async(req, res) => {
     try {
+        //Obtenemos lso datos enviados en el Body
         const publicacionData = req.body;
-        let imagenUrl = null;
+        let imagenUrl = null; //Inicializamos la variable imagen
 
         // Validar que el usuarioId existe
         const { usuarioId } = publicacionData;
+
         if (!usuarioId) {
             return res.status(400).json({
                 succes: false,
@@ -29,7 +31,7 @@ export const crearPublicacion = async(req, res) => {
             });
         }
 
-        // Si se envía archivo (imagen), subir a Cloudinary
+        // Si se envía una imagen la subimos a Cloudinary
         if (req.file) {
             try {
                 // Usar el path y el nombre generado por multer
@@ -48,7 +50,9 @@ export const crearPublicacion = async(req, res) => {
             publicacionData.imagenUrl = imagenUrl;
         }
 
+        //Creamos una nueva publicacion
         const publicacion = new Publicacion(publicacionData);
+        //Guardamos la publicacion en la base de datos
         await publicacion.save();
 
         res.status(201).json({
@@ -76,6 +80,7 @@ export const getPublicaciones = async(req, res) => {
             sort: { createdAt: -1 }
         }
 
+        //Buscamos las publicaciones con paginacion
         const publicaciones = await Publicacion.find()
             .limit(limit * 1)
             .skip((page - 1) * limit)
@@ -106,8 +111,9 @@ export const getPublicaciones = async(req, res) => {
 export const getPublicacionById = async (req, res) => {
     try {
         const { id } = req.params;
+        //Buscamos la publicacion
         const publicacion = await Publicacion.findById(id);
-            
+        
         if (!publicacion) {
             return res.status(404).json({
                 success: false,
@@ -115,7 +121,9 @@ export const getPublicacionById = async (req, res) => {
             });
         }
         // Obtener comentarios relacionados con esta publicacion
-        const comentarios = await Comentario.find({ publicacionId: id }).sort({ createdAt: -1 });
+        const comentarios = await Comentario
+            .find({ publicacionId: id })
+            .sort({ createdAt: -1 });
 
         res.status(200).json({
             success: true,
@@ -166,6 +174,7 @@ export const updatePublicacion = async (req, res) => {
             });
         }
         
+        //Actualizamos la publicacion
         const publicacion = await Publicacion.findByIdAndUpdate(
             id,
             publicacionData,
@@ -218,6 +227,7 @@ export const deletePublicacion = async (req, res) => {
             });
         }
 
+        //Eliminamos la publicacion
         await Publicacion.findByIdAndDelete(id);
 
         res.status(200).json({

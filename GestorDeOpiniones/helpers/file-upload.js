@@ -46,9 +46,7 @@ export const upload = multer({
     fileFilter: fileFilter,
 });
 
-/**
- * Middleware para manejar errores de upload
- */
+// Middleware para manejar errores de upload
 export const handleUploadError = (error, req, res, next) => {
     if (error instanceof multer.MulterError) {
         if (error.code === 'LIMIT_FILE_SIZE') {
@@ -78,6 +76,7 @@ export const handleUploadError = (error, req, res, next) => {
     next(error);
 };
 
+//Funcion para eliminar archivos por nombre
 export const deleteFile = (filename) => {
     try {
         const filePath = path.join(config.upload.uploadPath, filename);
@@ -92,6 +91,7 @@ export const deleteFile = (filename) => {
     }
 };
 
+//Funcion para eliminar un archivo por ruta completa
 export const deleteFileByPath = (filePath) => {
     try {
         if (fs.existsSync(filePath)) {
