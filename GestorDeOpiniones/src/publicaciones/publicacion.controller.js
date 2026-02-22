@@ -2,6 +2,7 @@
 
 import Publicacion from './publicacion.model.js';
 import { uploadImage } from '../../helpers/cloudinary-service.js';
+import Comentario from '../comentarios/comentario.model.js';
 import { validateUserExists } from '../../helpers/user-validation.js';
 
 //Crear Publicacion
@@ -113,10 +114,15 @@ export const getPublicacionById = async (req, res) => {
                 message: 'Publicacion no encontrada'
             });
         }
-        
+        // Obtener comentarios relacionados con esta publicacion
+        const comentarios = await Comentario.find({ publicacionId: id }).sort({ createdAt: -1 });
+
         res.status(200).json({
             success: true,
-            data: publicacion
+            data: {
+                publicacion,
+                comentarios
+            }
         });
     } catch (error) {
         res.status(500).json({
